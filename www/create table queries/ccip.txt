@@ -1,0 +1,91 @@
+ create database ccip;
+ use ccip;
+
+ create table Users(
+ User_Id varchar(50) primary key not null,
+ UPwd varchar(255) not null,
+ FName varchar(50) not null,
+ LName varchar(50) not null,
+ Login_Date date,
+ Photo longblob
+ );
+
+
+ create table Admins(
+ Admin_Id varchar(50) primary key not null,
+ APwd varchar(255) not null,
+ FName varchar(50) not null,
+ LName varchar(50) not null,
+ Photo longblob
+ );
+
+create table Clubs(
+Club_Id varchar(50) primary key not null,
+CName varchar(50) not null,
+CPhoto longblob not null,
+Description longtext not null,
+Followers int default 0
+);
+
+create table Followings(
+User_Id varchar(50),
+Club_Id varchar(50),
+constraint Followings_pk primary key (User_Id,Club_Id),
+constraint Followings_Ukf foreign key (User_Id) references Users(User_Id),
+constraint Followings_Ckf foreign key (Club_Id) references Clubs(Club_Id)
+);
+
+
+create table IsAdmin(
+Admin_Id varchar(50),
+Club_Id varchar(50),
+constraint Followings_pk primary key (Admin_Id,Club_Id),
+constraint Followings_Akf foreign key (Admin_Id) references Admins(Admin_Id),
+constraint Followings_Ckf1 foreign key (Club_Id) references Clubs(Club_Id)
+);
+
+
+create table Discussion(
+User_Id varchar(50),
+Date_Time datetime,
+Club_Id varchar(50),
+Dtext  text,
+constraint Dis_pk primary key (User_Id,Date_Time,Club_Id),
+constraint DisU_fk foreign key (User_Id) references Users (User_Id),
+constraint DisC_fk foreign key (Club_Id) references Clubs (Club_Id)
+);
+
+create table Posts(
+Post_Id int primary key auto_increment  ,
+Club_Id varchar(50),
+Post_Date datetime, 
+constraint Post_fk foreign key (Club_Id) references Clubs(Club_Id) 
+);
+
+
+create table Texts(
+Text_Id int primary key auto_increment,
+Theading varchar(225),
+TValue text not null,
+Post_Id int not null,
+constraint Text_fk foreign key (Post_Id) references Posts(Post_Id)
+);
+
+create table Photos(
+Photo_Id int primary key auto_increment,
+PValue longblob not null,
+Post_Id int not null,
+constraint Photos_fk foreign key (Post_Id) references Posts(Post_Id)
+);
+
+create table Comments(
+Comment_Id int primary key auto_increment ,
+User_Id varchar(50) not null,
+Post_Id int not null,
+Comment_Date datetime not null,
+CValue text not null,
+constraint Comments_Ufk foreign key (User_Id) references Users(User_Id),
+constraint Comments_Pfk foreign key (Post_Id) references Posts(Post_Id)
+ );
+
+
